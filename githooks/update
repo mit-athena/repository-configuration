@@ -136,6 +136,9 @@ def check_committer(rev, expected):
             rev)
 
 def main():
+    if not is_env_sane():
+        fatal("GIT_DIR isn't set. Did you run this hook from the command line?")
+
     refname, oldrev, newrev = sys.argv[1:]
 
     # Look up username in the authors file.
