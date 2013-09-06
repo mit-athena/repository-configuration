@@ -1,0 +1,43 @@
+#!/usr/bin/python
+
+# Hook script to process commit log and update Trac if necessary.
+
+from hookutils import *
+import re
+import sys
+import shlex
+
+commit_url_prefix = run(['git', 'config', 'hooks.commit-url-prefix'])[0]
+
+trac_re = re.compile(r'\(Trac:\s+#(\d+)\)')
+email_re = re.compile(r'(\w+)@mit\.edu')
+
+# Start with the log message for the commit.
+shortname = sys.argv[1]
+rev = sys.argv[2]
+msg = run(['git', 'show', '-s', '--format=%B', rev])
+
+if trac_re.search(''.join(msg)) is None:
+    sys.exit(0)
+
+revlink = rev
+if commit_url_prefix:
+    revlink = "[%s %s]" % (commit_url_prefix + rev, rev)
+
+subject = run(['git', 'show', '-s', '--format=%s', rev])[0]
+ticket = trac_re.search(''.join(msg)).group(1)
+author = run(['git', 'show', '-s', '--format=%ae', rev])[0].lower()
+committer = run(['git', 'show', '-s', '--format=%ce', rev])[0].lower()
+
+trac_msg = "committed %s (%s) to %s" % (revlink, subject, shortname)
+
+if author != committer:
+    trac_msg += ".  (patch originally from %s)" % (author)
+
+trac_author = ""
+if email_re.match(committer) is not None:
+    trac_author = email_re.match(committer).group(1)
+else:
+    trac_msg = committer + ' ' + trac_msg
+
+run(['trac-remote.py', 'commit_to_master', ticket, trac_msg, trac_author])
