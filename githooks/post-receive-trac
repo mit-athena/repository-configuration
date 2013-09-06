@@ -1,11 +1,12 @@
 #!/usr/bin/python
 
 # Hook script to process commit log and update Trac if necessary.
+#
+# TODO: Handle more than one ticket closer
 
 from hookutils import *
 import re
 import sys
-import shlex
 
 commit_url_prefix = run(['git', 'config', 'hooks.commit-url-prefix'])[0]
 
