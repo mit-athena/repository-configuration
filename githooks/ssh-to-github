@@ -1,0 +1,7 @@
+#!/bin/sh
+# 
+# We ssh to github without a KnownHosts file because Github changes
+# IP addresses often enough that this fails.  We also don't care if
+# our public source code ends up somewhere else.
+
+exec ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o GlobalKnownHostsFile=/dev/null -i /git/athena/private/github_id_rsa "$@"
