@@ -1,4 +1,0 @@
-#!/bin/sh
-echo "*** Simulated rt-cvsgate (arg: $1)"
-cat
-echo "*** End simulated rt-cvsgate"
