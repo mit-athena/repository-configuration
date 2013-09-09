@@ -26,5 +26,16 @@ def run(args):
 def hookdir_file(name):
     return os.path.join(os.getenv('GIT_DIR'), 'hooks', name)
 
-if run(['git', 'config', 'hooks.verbose'])[0].lower == 'false':
+# Check if the environment is sane for a git hook to run. This means
+# checking that GIT_DIR is set and that it exists.
+def is_env_sane():
+    git_dir = os.getenv('GIT_DIR')
+    if git_dir == None:
+        return False
+    if not os.path.exists(git_dir):
+        return False
+    # Everything went okay
+    return True
+
+if run(['git', 'config', 'hooks.verbose'])[0].lower() == 'false':
     verbose = False
