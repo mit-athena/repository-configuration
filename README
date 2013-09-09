@@ -1,15 +1,13 @@
-Information, scripts, configuration, etc. about krbdev infrastructure
-components.
+The canonical copy of configuration and tools related to the Athena git
+repository hosted on git.mit.edu (drugstore.mit.edu).  Much content
+originally from the krbdev-services repository
+<https://github.com/krb5/krbdev-services>
 
 
-bind/
-        Zone files etc. for kerberos.org and related domains.
+githooks/
+	Server-side hooks for the git repository
 
-krbsnap/
-        Nightly snapshot generation on krbdev.mit.edu.  Also periodic
-        git-svn sync to github.
+utils/
+	Utility scripts
 
-svnhooks/
-        Hook scripts for our Subversion repositories.  This set comes
-        from the krb5 repository; krb5-appl might have a slightly
-        different set of scripts.
+
