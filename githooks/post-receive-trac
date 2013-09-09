@@ -41,4 +41,4 @@ if email_re.match(committer) is not None:
 else:
     trac_msg = committer + ' ' + trac_msg
 
-run(['trac-remote.py', 'commit_to_master', ticket, trac_msg, trac_author])
+run(['/git/athena/util/trac-remote.py', '--credentials', '/git/athena/private/trac-credentials', 'commit_to_master', ticket, trac_msg, trac_author])
