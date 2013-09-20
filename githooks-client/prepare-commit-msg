@@ -1,0 +1,29 @@
+#!/bin/sh
+#
+# A hook to pre-populate the commit message with any additions
+# to the debian changelog file.
+#
+# The changelog entry is commented out so that the default message will
+# still be empty and abort the commit
+
+filename=$1
+
+# The cwd of the hook is the repository root 
+# The git diff command will exit silently if debian/changelog doesn't
+# exist or isn't changed
+log=`git diff --cached -- debian/changelog | awk '
+  /^\+  [ *]/ {
+    print substr($0, 2);
+  }
+'`
+
+if [ -n "$log" ]; then
+    original_msg=$(cat $filename)
+    cat >$filename <<EOF
+
+# From debian/changelog
+$(echo "$log" | sed -e 's/^/#/g')
+$original_msg
+EOF
+fi
+
