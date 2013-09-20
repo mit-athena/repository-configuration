@@ -8,6 +8,9 @@
 
 filename=$1
 
+# Don't bother if they specified a message on the command line
+[ "$2" = "message" ] && exit 0
+
 # The cwd of the hook is the repository root 
 # The git diff command will exit silently if debian/changelog doesn't
 # exist or isn't changed
@@ -18,8 +21,8 @@ log=`git diff --cached -- debian/changelog | awk '
 '`
 
 if [ -n "$log" ]; then
-    original_msg=$(cat $filename)
-    cat >$filename <<EOF
+    original_msg=$(cat "$filename")
+    cat >"$filename" <<EOF
 
 # From debian/changelog
 $(echo "$log" | sed -e 's/^/#/g')
