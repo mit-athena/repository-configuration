@@ -77,6 +77,10 @@ def modeline_disallows_tabs(rev, filename):
 button_re = re.compile(r'^\s*bigredbutton:\s*whitespace\s*$', re.IGNORECASE)
 chunk_header_re = re.compile(r'^@@ -\d+(,(\d+))? \+(\d+)(,(\d+))? @@$')
 def check_whitespace(rev, msg):
+    # Check if whitespace check is disabled on this repo
+    if get_git_config('hooks.skip_whitespace_check', 'no') == 'yes':
+        return
+
     # Check if whitespace check is turned off by commit message.
     for line in msg:
         if button_re.match(line):
