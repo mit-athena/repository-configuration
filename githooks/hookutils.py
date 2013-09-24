@@ -7,8 +7,18 @@ no_rev = '0' * 40
 
 verbose = True
 
+# Get the value of a git config key
+# Normally, git config returns non-zero if the key doesn't exist
+def get_git_config(key, default=None):
+    args = ['git', 'config', key]
+    value = run(args, False)
+    if len(value) > 0:
+        return value[0]
+    else:
+        return default
+
 # Run a command and return a list of its output lines.
-def run(args):
+def run(args, exit_on_fail=True):
     # Can't use subprocess.check_output until 2.7 (drugstore has 2.4).
     p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     out, err = p.communicate()
@@ -17,8 +27,9 @@ def run(args):
             sys.stderr.write('Failed command: ' + ' '.join(args) + '\n')
             if err != '':
                 sys.stderr.write('stderr:\n' + err)
-        sys.stderr.write('Unexpected command failure, exiting\n')
-        sys.exit(1)
+        if exit_on_fail:
+            sys.stderr.write('Unexpected command failure, exiting\n')
+            sys.exit(1)
     return out.splitlines()
 
 
