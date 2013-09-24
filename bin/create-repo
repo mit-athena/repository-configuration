@@ -1,0 +1,51 @@
+#!/bin/bash
+
+set -e
+
+PACKAGENAME="$1"
+GITHUB_TOKEN="$(cat /git/athena/private/github-token)"
+AUTH_HEADER="Authorization: token ${GITHUB_TOKEN}"
+HOOK_CONFIG=$(cat <<EOF
+{
+  "name": "web",
+  "active": true,
+  "events": [
+    "push"
+  ],
+  "config": {
+    "url": "http://zcommit.mit.edu/github/class/debathena",
+    "content_type": "form"
+  }
+}
+EOF
+)
+
+if [ -z "${PACKAGENAME}" ]; then
+	echo "No package name specified" >&2
+	exit 1
+fi
+if [ -z "${GITHUB_TOKEN}" ]; then
+	echo "GitHub token not found" >&2
+	exit 1
+fi
+
+curl -sS -H "${AUTH_HEADER}" -d "{\"name\":\"${PACKAGENAME}\"}" "https://api.github.com/orgs/mit-athena/repos" > /dev/null
+curl -sS -H "${AUTH_HEADER}" -d "${HOOK_CONFIG}" "https://api.github.com/repos/mit-athena/${PACKAGENAME}/hooks" > /dev/null
+
+git init --bare --shared=group /git/athena/"${PACKAGENAME}.git"
+pushd /git/athena/"${PACKAGENAME}.git"
+mv hooks hooks.orig
+ln -s /git/athena/repository-configuration/githooks hooks
+git config core.sharedRepository group         #Should be set by shared=group
+git config core.logAllRefUpdates true
+git remote add --mirror=push github git@github.com:mit-athena/"${PACKAGENAME}.git"
+git config gc.reflogexpire never
+git config gc.reflogexpireunreachable never
+git config receive.fsckObjects true
+git config receive.denyNonFastForwards true     #Should be set by shared=group
+git config hooks.push-to github
+git config hooks.mailinglist source-commits@mit.edu
+git config hooks.verbose true
+git config hooks.reponame "${PACKAGENAME}"
+git config hooks.commit-url-prefix https://github.com/mit-athena/"${PACKAGENAME}"/commit/
+popd
