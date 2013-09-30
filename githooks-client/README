@@ -1,0 +1,3 @@
+This directory contains "client-side" git hooks that individual
+developers may use if they so desire.  Nothing in this directory should
+be deployed to drugstore.mit.edu
