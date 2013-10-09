@@ -172,8 +172,8 @@ def main():
     elif refname.startswith('refs/tags/'):
         if oldrev != no_rev:
             fatal('Changing tags is not allowed')
-        else:
-            fatal('Non-branch, non-tag refname is not allowed')
+    else:
+        fatal('Non-branch, non-tag refname is not allowed')
 
     if error_count > 0:
         fatal('%d errors detected' % error_count)
