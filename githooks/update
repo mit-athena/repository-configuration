@@ -78,7 +78,7 @@ button_re = re.compile(r'^\s*bigredbutton:\s*whitespace\s*$', re.IGNORECASE)
 chunk_header_re = re.compile(r'^@@ -\d+(,(\d+))? \+(\d+)(,(\d+))? @@$')
 def check_whitespace(rev, msg):
     # Check if whitespace check is disabled on this repo
-    if get_git_config('hooks.skip_whitespace_check', 'no') == 'yes':
+    if get_git_config('hooks.skip-whitespace-check', 'false') == 'true':
         return
 
     # Check if whitespace check is turned off by commit message.
