@@ -10,7 +10,6 @@
 # * Commit message which doesn't start with a <=50-character summary
 # * Commit message summary line ending with period
 # * Commit message beginning with something looking like an RT header
-# * Commit message containing 'ticket: new' instead of 'ticket: NNNN (new)'
 
 from hookutils import *
 import re
@@ -34,7 +33,6 @@ def fatal(msg):
 
 # Return an error string if rev has a bad log message.
 bad_new_ticket_re = re.compile(r'^(RT-)?ticket:\s*new$', re.IGNORECASE)
-header_re = re.compile(r'([\w-]+):\s*(.*)')
 def check_message(rev, msg):
     if len(msg) == 0 or msg[0] == '':
         err('Message is empty or begins with blank line', rev)
@@ -43,8 +41,6 @@ def check_message(rev, msg):
         err('Message must begin with summary (50 characters or less)', rev)
     if msg[0].endswith('.'):
         err('Summary line must not end with period', rev)
-    if header_re.match(msg[0]):
-        err('Message must not begin with RT header', rev)
     is_new_ticket = False
     has_id = False
     for line in msg[::-1]:
