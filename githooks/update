@@ -151,7 +151,7 @@ def main():
             expected_committer = m.group(2)
     f.close()
     if not expected_committer:
-        fatal('User %s unrecognized; contact mitkc-staff@mit.edu' % user)
+        fatal('User %s unrecognized; contact release-team@mit.edu' % user)
 
     # receive.denyDeletes experimentally only applies to branches, so
     # check for all ref deletions in this hook.
