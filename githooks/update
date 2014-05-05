@@ -144,6 +144,9 @@ def main():
     # Look up username in the authors file.
     expected_committer = None
     user = run(['id', '-un'])[0]
+    # Never break builder, or else this makes dapublish sad
+    if user == 'builder':
+        sys.exit(0)
     f = open(hookdir_file('authors'), 'r')
     for line in f:
         m = author_re.match(line)
