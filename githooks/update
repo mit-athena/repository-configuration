@@ -167,7 +167,7 @@ def main():
             msg = run(['git', 'show', '-s', '--format=%B', rev])
             check_message(rev, msg)
             check_whitespace(rev, msg)
-            check_committer(rev, expected_committer)
+            #check_committer(rev, expected_committer)
     elif refname.startswith('refs/tags/'):
         if oldrev != no_rev:
             fatal('Changing tags is not allowed')
