@@ -7,7 +7,7 @@
 # * Whitespace errors in a commit diff
 # * Commit author doesn't match mapping for user in hooks/authors
 # * Empty commit message
-# * Commit message which doesn't start with a <=50-character summary
+# * Commit message which doesn't start with a <=72-character summary
 # * Commit message summary line ending with period
 # * Commit message beginning with something looking like an RT header
 
@@ -37,8 +37,8 @@ def check_message(rev, msg):
     if len(msg) == 0 or msg[0] == '':
         err('Message is empty or begins with blank line', rev)
         return
-    if len(msg[0]) > 50 or (len(msg) > 1 and msg[1] != ''):
-        err('Message must begin with summary (50 characters or less)', rev)
+    if len(msg[0]) > 72 or (len(msg) > 1 and msg[1] != ''):
+        err('Message must begin with summary (72 characters or less)', rev)
     if msg[0].endswith('.'):
         err('Summary line must not end with period', rev)
     is_new_ticket = False
